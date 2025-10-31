@@ -141,3 +141,108 @@ Si el backend te tira NO_TOKEN es porque el frontend no está mandando el token 
 Si las ventas te devuelven NO_CASH_OPEN, abrí primero la caja.
 
 En reports ya viene todo agrupado por caja y turno.
+
+Base de datos, creación de tablas y dos usuarios
+-- =========================================
+-- 🧾 BASE DE DATOS: gastronomia
+-- =========================================
+CREATE DATABASE IF NOT EXISTS gastronomia CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE gastronomia;
+
+-- =========================================
+-- 👤 USUARIOS
+-- =========================================
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(120) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  full_name VARCHAR(120) NOT NULL,
+  role ENUM('admin','cajero','mozo') DEFAULT 'cajero',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- =========================================
+-- 🛒 PRODUCTOS
+-- =========================================
+CREATE TABLE IF NOT EXISTS products (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  sku VARCHAR(40) UNIQUE NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- =========================================
+-- 💰 SESIONES DE CAJA (turnos)
+-- =========================================
+CREATE TABLE IF NOT EXISTS cash_sessions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  opening_amount DECIMAL(10,2) DEFAULT 0,
+  closing_amount DECIMAL(10,2) DEFAULT NULL,
+  difference DECIMAL(10,2) DEFAULT 0,
+  status ENUM('abierta','cerrada') DEFAULT 'abierta',
+  shift_number INT NOT NULL,
+  opened_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  closed_at DATETIME DEFAULT NULL,
+  opened_by INT,
+  closed_by INT,
+  FOREIGN KEY (opened_by) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY (closed_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- =========================================
+-- 📥 MOVIMIENTOS DE CAJA
+-- =========================================
+CREATE TABLE IF NOT EXISTS cash_movements (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  session_id INT NOT NULL,
+  type ENUM('ingreso','egreso','venta') NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  reference VARCHAR(255) DEFAULT NULL,
+  user_id INT DEFAULT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (session_id) REFERENCES cash_sessions(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- =========================================
+-- 🧾 VENTAS
+-- =========================================
+CREATE TABLE IF NOT EXISTS sales (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT DEFAULT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  payment_method ENUM('efectivo','qr','tarjeta') DEFAULT 'efectivo',
+  cash_session_id INT DEFAULT NULL,
+  shift_number INT DEFAULT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY (cash_session_id) REFERENCES cash_sessions(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- =========================================
+-- 🧾 DETALLE DE VENTAS
+-- =========================================
+DROP TABLE IF EXISTS sale_items;
+
+CREATE TABLE IF NOT EXISTS sale_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  sale_id INT NOT NULL,
+  product_id INT NULL,              -- ✅ puede ser NULL si se borra el producto
+  qty INT NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- =========================================
+-- ✅ DATOS INICIALES
+-- =========================================
+INSERT INTO `users` (`id`, `email`, `password_hash`, `full_name`, `role`) VALUES
+(1, 'admin@local.test', '$2b$10$4o0TlXTqhHTWonroyhmtCeSaGgamBQ7tht9lmoafWL/vEGUV71oQ6', 'Admin Local', 'admin'),
+(2, 'caja@local.test', '$2b$10$ncBaVgQduxLk.9V0Sau7F.aOa93LTDo8V5cGqHzAdprdjNcZCfMEC', 'Cajero Local', 'cajero');
+
+-- La contraseña para ambos usuarios es "123456"
+
+
+
