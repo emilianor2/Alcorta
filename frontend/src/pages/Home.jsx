@@ -8,7 +8,6 @@ export default function Home() {
     JSON.parse(localStorage.getItem("user") || "{}")
   );
   const [cash, setCash] = useState(null);
-  const [montoApertura, setMontoApertura] = useState(""); // 👈 nuevo
   const navigate = useNavigate();
   const role = user?.role || "cajero";
 
@@ -19,7 +18,7 @@ export default function Home() {
       localStorage.setItem("user", JSON.stringify(me.user));
 
       const { data: caja } = await api.get("/cash/current");
-      setCash(caja.session); // null o { ... , shift_number }
+      setCash(caja.session || null);
     } catch (e) {
       console.error(e);
     }
@@ -29,11 +28,15 @@ export default function Home() {
     loadAll();
   }, []);
 
+  // abre SIEMPRE con 0, monto real se carga en /app/caja
   async function abrirCaja() {
-  await api.post("/cash/open");
-  await loadAll();
-}
-
+    try {
+      await api.post("/cash/open", { opening_amount: 0 });
+      await loadAll();
+    } catch (e) {
+      alert(e.response?.data?.error || "No se pudo abrir la caja");
+    }
+  }
 
   function logout() {
     localStorage.removeItem("token");
@@ -58,7 +61,7 @@ export default function Home() {
             )}
           </div>
           <div className="flex gap-2">
-            {cash && role === "admin" && (
+            {role === "admin" && (
               <Link
                 to="/app/reportes"
                 className="bg-black text-white px-4 py-2 rounded-lg"
@@ -75,7 +78,7 @@ export default function Home() {
           </div>
         </header>
 
-        {/* cuerpo */}
+        {/* bloque principal */}
         <div className="bg-white rounded-2xl shadow p-6 space-y-4">
           <p>
             Bienvenido/a{" "}
@@ -85,33 +88,74 @@ export default function Home() {
             </span>
           </p>
 
-          {/* SIN CAJA → mostrar botón simple */}
-{!cash && (
-  <div className="border rounded-xl p-4">
-    <h2 className="font-semibold mb-1">Caja cerrada</h2>
-    <p className="text-sm text-gray-500 mb-3">
-      Para operar tenés que abrir la caja del día. Esto registrará el turno y
-      quién la abrió, sin pedir monto todavía.
-    </p>
-    <button
-      onClick={abrirCaja}
-      className="bg-black text-white px-3 py-2 rounded-lg"
-    >
-      Abrir caja
-    </button>
-  </div>
-)}
+          {/* SIN CAJA → solo botón (admin y cajero) */}
+          {!cash && (
+            <div className="border rounded-xl p-4 mb-2">
+              <h2 className="font-semibold mb-1">Caja cerrada</h2>
+              <p className="text-sm text-gray-500 mb-3">
+                Abrí la caja para poder hacer ventas y movimientos. El monto de
+                apertura lo cargás después en <b>Caja</b>.
+              </p>
+              <button
+                onClick={abrirCaja}
+                className="bg-black text-white px-3 py-2 rounded-lg"
+              >
+                Abrir caja
+              </button>
+            </div>
+          )}
 
+          {/* ADMIN sin caja → igual puede entrar a todo lo de gestión */}
+          {role === "admin" && !cash && (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+              <Link
+                to="/app/productos"
+                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+              >
+                Productos
+              </Link>
+              <Link
+                to="/app/reportes"
+                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+              >
+                Reportes
+              </Link>
+              <Link
+                to="/app/usuarios"
+                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+              >
+                Usuarios
+              </Link>
+              <Link
+                to="/app/proveedores"
+                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+              >
+                Proveedores
+              </Link>
+              <div className="border rounded-xl p-4 text-center text-gray-400">
+                Ventas (requiere caja)
+              </div>
+              <Link
+                to="/app/caja"
+                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+              >
+                Ir a Caja
+              </Link>
+            </div>
+          )}
 
-          {/* CON CAJA → mostrar menú */}
+          {/* CON CAJA → menú normal */}
           {cash && (
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* todos */}
               <Link
                 to="/app/ventas"
                 className="border rounded-xl p-4 text-center hover:bg-gray-50"
               >
                 Ventas
               </Link>
+
+              {/* admin extra */}
               {role === "admin" && (
                 <Link
                   to="/app/productos"
@@ -128,6 +172,24 @@ export default function Home() {
                   Reportes
                 </Link>
               )}
+              {role === "admin" && (
+                <Link
+                  to="/app/usuarios"
+                  className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                >
+                  Usuarios
+                </Link>
+              )}
+              {role === "admin" && (
+                <Link
+                  to="/app/proveedores"
+                  className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                >
+                  Proveedores
+                </Link>
+              )}
+
+              {/* caja para todos */}
               <Link
                 to="/app/caja"
                 className="border rounded-xl p-4 text-center hover:bg-gray-50"

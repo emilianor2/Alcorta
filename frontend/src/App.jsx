@@ -6,6 +6,8 @@ import Ventas from "./pages/Ventas.jsx";
 import Reportes from "./pages/Reportes.jsx";
 import Productos from "./pages/Productos.jsx";
 import Caja from "./pages/Caja.jsx";
+import Usuarios from "./pages/Usuarios.jsx";
+import Proveedores from "./pages/Proveedores.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
@@ -61,7 +63,22 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
+      <Route
+        path="/app/usuarios"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <Usuarios />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/app/proveedores"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <Proveedores />
+          </ProtectedRoute>
+        }
+      />
       {/* fallback */}
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>

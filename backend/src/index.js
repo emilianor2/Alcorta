@@ -7,6 +7,9 @@ import productsRouter from './routes/products.routes.js'; // 🆕 import nuevo
 import salesRouter from './routes/sales.routes.js'; 
 import cashRouter from "./routes/cash.routes.js";
 import reportsRouter from "./routes/reports.routes.js"; // 👈 nuevo
+import employeesRouter from "./routes/employees.routes.js";
+import suppliersRouter from "./routes/suppliers.routes.js";
+import usersRouter from "./routes/users.routes.js";
 dotenv.config();
 
 const app = express();
@@ -22,6 +25,9 @@ app.use('/api/products', productsRouter); // 🆕 Montaje del router de producto
 app.use('/api/sales', salesRouter);      
 app.use("/api/cash", cashRouter);
 app.use("/api/reports", reportsRouter); // 👈 nuevo
+app.use("/api/employees", employeesRouter);
+app.use("/api/suppliers", suppliersRouter);
+app.use("/api/users", usersRouter);
 import { authRequired } from './middleware/auth.js';
 
 // --- Inicialización de la base de datos ---

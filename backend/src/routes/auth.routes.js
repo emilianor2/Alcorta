@@ -28,12 +28,22 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ ok: false, error: "BAD_CREDENTIALS" });
   }
 
-  // 👇👀 ACÁ es lo importante
+  // si tiene empleado, lo buscamos
+  let employee = null;
+  if (user.employee_id) {
+    const [erows] = await pool.query(
+      "SELECT id, nombre, apellido, dni, puesto FROM employees WHERE id = ?",
+      [user.employee_id]
+    );
+    employee = erows[0] || null;
+  }
+
   const payload = {
-    id: user.id,                 // 👈 ESTE nombre tiene que ser "id"
+    id: user.id,
     email: user.email,
     full_name: user.full_name,
     role: user.role,
+    employee_id: user.employee_id || null,
   };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -43,7 +53,10 @@ router.post("/login", async (req, res) => {
   res.json({
     ok: true,
     token,
-    user: payload, // lo mandamos también para el front
+    user: {
+      ...payload,
+      employee: employee, // 👈 opcional
+    },
   });
 });
 

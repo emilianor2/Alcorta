@@ -244,5 +244,67 @@ INSERT INTO `users` (`id`, `email`, `password_hash`, `full_name`, `role`) VALUES
 
 -- La contraseña para ambos usuarios es "123456"
 
+-- ============================
+-- EMPLEADOS / USUARIOS DEL SISTEMA
+-- ============================
+CREATE TABLE IF NOT EXISTS employees (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  apellido VARCHAR(100) NOT NULL,
+  nombre VARCHAR(100) NOT NULL,
+  dni VARCHAR(15) NOT NULL,
+  cuil VARCHAR(20) NOT NULL,
+  fecha_nac DATE NULL,
+  telefono VARCHAR(30) NULL,
+  email VARCHAR(120) NULL,
+  direccion VARCHAR(200) NULL,
+  localidad VARCHAR(120) NULL,
+  provincia VARCHAR(120) NULL,
+  puesto VARCHAR(120) NULL,           -- mozo, cajero, admin, cocina, etc
+  fecha_ingreso DATE NULL,
+  estado ENUM('activo','inactivo') DEFAULT 'activo',
+  -- auditoría
+  created_by INT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_by INT NULL,
+  updated_at TIMESTAMP NULL,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
 
+-- índice útil
+CREATE INDEX idx_employees_dni ON employees(dni);
+
+-- ============================
+-- PROVEEDORES
+-- ============================
+CREATE TABLE IF NOT EXISTS suppliers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  razon_social VARCHAR(150) NOT NULL,
+  cuit VARCHAR(20) NOT NULL,
+  iibb VARCHAR(40) NULL,
+  condicion_iva ENUM('RI','Monotributo','Exento','CF') DEFAULT 'CF',
+  telefono VARCHAR(30) NULL,
+  email VARCHAR(120) NULL,
+  direccion VARCHAR(200) NULL,
+  localidad VARCHAR(120) NULL,
+  provincia VARCHAR(120) NULL,
+  contacto VARCHAR(120) NULL,          -- nombre de la persona
+  notas TEXT NULL,
+  -- auditoría
+  created_by INT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_by INT NULL,
+  updated_at TIMESTAMP NULL,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_suppliers_cuit ON suppliers(cuit);
+
+-- 1) users puede apuntar a un empleado
+ALTER TABLE users
+  ADD COLUMN employee_id INT NULL AFTER role,
+  ADD CONSTRAINT fk_users_employee
+    FOREIGN KEY (employee_id) REFERENCES employees(id)
+    ON DELETE SET NULL;
 
