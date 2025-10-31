@@ -35,6 +35,7 @@ cd Alcorta
 
 cd backend
 npm install
+
 Crear el archivo .env en backend/:
 
 env
@@ -47,13 +48,11 @@ DB_DATABASE=alcorta
 JWT_SECRET=supersecreto
 Levantar el backend:
 
-bash
-Copiar código
+
 npm run dev
 Esto levanta el API en:
 
-text
-Copiar código
+
 http://localhost:4000/api
 El backend crea las tablas básicas (users, products) si no existen.
 Después vos ya tenés las tablas extra que usamos: cash_sessions, cash_movements, sales, sale_items.
@@ -61,15 +60,13 @@ Después vos ya tenés las tablas extra que usamos: cash_sessions, cash_movement
 4. Frontend
 En otra consola:
 
-bash
-Copiar código
+
 cd frontend
 npm install
 npm run dev
 Por defecto Vite lo va a levantar en:
 
-text
-Copiar código
+
 http://localhost:5173
 El frontend ya está configurado para pegarle al backend en http://localhost:4000/api (en src/services/api.js). Si lo corrés en otro puerto, cambiá ahí.
 
@@ -110,18 +107,14 @@ Las ventas (/app/ventas) solo funcionan si hay una caja abierta.
 7. Scripts útiles
 Backend
 
-bash
-Copiar código
-npm run dev   # nodemon src/index.js
+npm run dev   
 Frontend
 
-bash
-Copiar código
 npm run dev   # levanta Vite
 npm run build # build de producción
+
 8. Estructura (propuesta)
-text
-Copiar código
+
 Alcorta/
 ├── backend/
 │   ├── src/
