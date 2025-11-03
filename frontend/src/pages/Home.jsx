@@ -45,33 +45,33 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-surface-100 to-surface-50 text-gray-100">
+      <div className="max-w-6xl mx-auto px-4 py-6">
         {/* header */}
         <header className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-semibold">Inicio</h1>
+            <h1 className="text-2xl font-semibold text-white">Inicio</h1>
             {cash ? (
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-300">
                 Caja abierta · turno {cash.shift_number} ·{" "}
                 {new Date(cash.opened_at).toLocaleTimeString()}
               </p>
             ) : (
-              <p className="text-sm text-red-500">Caja cerrada</p>
+              <p className="text-sm text-danger-500">Caja cerrada</p>
             )}
           </div>
           <div className="flex gap-2">
             {role === "admin" && (
               <Link
                 to="/app/reportes"
-                className="bg-black text-white px-4 py-2 rounded-lg"
+                className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg shadow"
               >
                 Ver reportes
               </Link>
             )}
             <button
               onClick={logout}
-              className="bg-red-600 text-white px-4 py-2 rounded-lg"
+              className="bg-danger-600 hover:bg-danger-700 text-white px-4 py-2 rounded-lg shadow"
             >
               Cerrar sesión
             </button>
@@ -79,26 +79,26 @@ export default function Home() {
         </header>
 
         {/* bloque principal */}
-        <div className="bg-white rounded-2xl shadow p-6 space-y-4">
-          <p>
+        <div className="bg-surface-200 border border-surface-400 rounded-2xl shadow-card p-6 space-y-5">
+          <p className="text-white">
             Bienvenido/a{" "}
             <b>{user.full_name || user.name || user.email || "Usuario"}</b>
-            <span className="ml-2 inline-block text-xs px-2 py-1 bg-gray-100 rounded">
+            <span className="ml-2 inline-block text-xs px-2 py-1 bg-brand-500/15 text-brand-300 border border-brand-500/30 rounded">
               {role}
             </span>
           </p>
 
           {/* SIN CAJA → solo botón (admin y cajero) */}
           {!cash && (
-            <div className="border rounded-xl p-4 mb-2">
-              <h2 className="font-semibold mb-1">Caja cerrada</h2>
-              <p className="text-sm text-gray-500 mb-3">
+            <div className="border border-surface-400 rounded-xl p-4 mb-2 bg-surface-300/60">
+              <h2 className="font-semibold mb-1 text-white">Caja cerrada</h2>
+              <p className="text-sm text-gray-300 mb-3">
                 Abrí la caja para poder hacer ventas y movimientos. El monto de
                 apertura lo cargás después en <b>Caja</b>.
               </p>
               <button
                 onClick={abrirCaja}
-                className="bg-black text-white px-3 py-2 rounded-lg"
+                className="bg-brand-600 hover:bg-brand-700 text-white px-3 py-2 rounded-lg shadow"
               >
                 Abrir caja
               </button>
@@ -110,34 +110,34 @@ export default function Home() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
               <Link
                 to="/app/productos"
-                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
               >
                 Productos
               </Link>
               <Link
                 to="/app/reportes"
-                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
               >
                 Reportes
               </Link>
               <Link
                 to="/app/usuarios"
-                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
               >
                 Usuarios
               </Link>
               <Link
                 to="/app/proveedores"
-                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
               >
                 Proveedores
               </Link>
-              <div className="border rounded-xl p-4 text-center text-gray-400">
+              <div className="border border-surface-400 rounded-xl p-4 text-center text-gray-500 bg-surface-400">
                 Ventas (requiere caja)
               </div>
               <Link
                 to="/app/caja"
-                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
               >
                 Ir a Caja
               </Link>
@@ -150,7 +150,7 @@ export default function Home() {
               {/* todos */}
               <Link
                 to="/app/ventas"
-                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
               >
                 Ventas
               </Link>
@@ -159,7 +159,7 @@ export default function Home() {
               {role === "admin" && (
                 <Link
                   to="/app/productos"
-                  className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                  className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
                 >
                   Productos
                 </Link>
@@ -167,7 +167,7 @@ export default function Home() {
               {role === "admin" && (
                 <Link
                   to="/app/reportes"
-                  className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                  className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
                 >
                   Reportes
                 </Link>
@@ -175,7 +175,7 @@ export default function Home() {
               {role === "admin" && (
                 <Link
                   to="/app/usuarios"
-                  className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                  className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
                 >
                   Usuarios
                 </Link>
@@ -183,7 +183,7 @@ export default function Home() {
               {role === "admin" && (
                 <Link
                   to="/app/proveedores"
-                  className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                  className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
                 >
                   Proveedores
                 </Link>
@@ -192,12 +192,9 @@ export default function Home() {
               {/* caja para todos */}
               <Link
                 to="/app/caja"
-                className="border rounded-xl p-4 text-center hover:bg-gray-50"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
               >
                 Caja
-                <span className="block text-xs text-green-600 mt-1">
-                  turno {cash.shift_number}
-                </span>
               </Link>
             </div>
           )}

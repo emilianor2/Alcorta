@@ -9,12 +9,59 @@
   <!-- Tailwind CDN (solo para desarrollo) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    // opcional: tu configuración mínima
+    // configuración del tema (marca naranja + modo oscuro)
     tailwind.config = {
-      theme: { extend: {} },
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Inter", "system-ui", "Avenir", "Helvetica", "Arial", "sans-serif"],
+          },
+          colors: {
+            brand: {
+              50: "#fff7ed",   // naranja muy claro
+              100: "#ffedd5",
+              200: "#fed7aa",
+              300: "#fdba74",
+              400: "#fb923c",
+              500: "#f97316",
+              600: "#ea580c",
+              700: "#c2410c",
+              800: "#9a3412",
+              900: "#7c2d12"
+            },
+            surface: {
+              // superficies oscuras
+              50: "#111113",
+              100: "#161618",
+              200: "#1c1c1f",
+              300: "#232327",
+              400: "#2b2b30",
+              500: "#313138",
+            },
+            accent: {
+              500: "#22c55e",
+              600: "#16a34a"
+            },
+            danger: {
+              500: "#ef4444",
+              600: "#dc2626"
+            }
+          },
+          boxShadow: {
+            card: "0 10px 20px -10px rgba(0,0,0,0.35)",
+          },
+          borderRadius: {
+            xl: "1rem",
+            '2xl': "1.25rem"
+          },
+        },
+      },
       corePlugins: { preflight: true }
-    }
+    };
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>

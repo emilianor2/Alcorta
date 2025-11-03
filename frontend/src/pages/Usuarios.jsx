@@ -138,7 +138,7 @@ export default function Usuarios() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-surface-100 to-surface-50 text-gray-100 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         <AppHeader title="Usuarios / Empleados" />
 
@@ -146,20 +146,20 @@ export default function Usuarios() {
         <div className="flex gap-2">
           <button
             onClick={() => setActiveTab("empleados")}
-            className={`px-4 py-2 rounded-lg ${
+            className={`px-4 py-2 rounded-lg border ${
               activeTab === "empleados"
-                ? "bg-black text-white"
-                : "bg-white text-gray-700"
+                ? "bg-brand-600 hover:bg-brand-700 text-white border-brand-600"
+                : "border-surface-400 bg-surface-300 hover:bg-surface-400 text-gray-100"
             }`}
           >
             Empleados
           </button>
           <button
             onClick={() => setActiveTab("usuarios")}
-            className={`px-4 py-2 rounded-lg ${
+            className={`px-4 py-2 rounded-lg border ${
               activeTab === "usuarios"
-                ? "bg-black text-white"
-                : "bg-white text-gray-700"
+                ? "bg-brand-600 hover:bg-brand-700 text-white border-brand-600"
+                : "border-surface-400 bg-surface-300 hover:bg-surface-400 text-gray-100"
             }`}
           >
             Usuarios del sistema
@@ -171,12 +171,12 @@ export default function Usuarios() {
           <>
             <form
               onSubmit={submitEmpleado}
-              className="bg-white p-4 rounded-xl shadow grid md:grid-cols-3 gap-3"
+              className="bg-surface-200 p-4 rounded-xl shadow-card border border-surface-400 grid md:grid-cols-3 gap-3"
             >
               <div>
-                <label className="text-sm">Apellido</label>
+                <label className="text-sm text-gray-300">Apellido</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.apellido}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, apellido: e.target.value })
@@ -185,9 +185,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Nombre</label>
+                <label className="text-sm text-gray-300">Nombre</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.nombre}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, nombre: e.target.value })
@@ -196,9 +196,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">DNI</label>
+                <label className="text-sm text-gray-300">DNI</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.dni}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, dni: e.target.value })
@@ -207,9 +207,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">CUIL</label>
+                <label className="text-sm text-gray-300">CUIL</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.cuil}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, cuil: e.target.value })
@@ -218,9 +218,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Teléfono</label>
+                <label className="text-sm text-gray-300">Teléfono</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.telefono}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, telefono: e.target.value })
@@ -228,9 +228,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Email</label>
+                <label className="text-sm text-gray-300">Email</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.email}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, email: e.target.value })
@@ -238,9 +238,9 @@ export default function Usuarios() {
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="text-sm">Dirección</label>
+                <label className="text-sm text-gray-300">Dirección</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.direccion}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, direccion: e.target.value })
@@ -248,9 +248,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Localidad</label>
+                <label className="text-sm text-gray-300">Localidad</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.localidad}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, localidad: e.target.value })
@@ -258,9 +258,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Provincia</label>
+                <label className="text-sm text-gray-300">Provincia</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.provincia}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, provincia: e.target.value })
@@ -268,9 +268,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Puesto</label>
+                <label className="text-sm text-gray-300">Puesto</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.puesto}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, puesto: e.target.value })
@@ -279,10 +279,10 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Fecha ingreso</label>
+                <label className="text-sm text-gray-300">Fecha ingreso</label>
                 <input
                   type="date"
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={empForm.fecha_ingreso}
                   onChange={(e) =>
                     setEmpForm({ ...empForm, fecha_ingreso: e.target.value })
@@ -290,15 +290,15 @@ export default function Usuarios() {
                 />
               </div>
               <div className="md:col-span-3 flex justify-end">
-                <button className="bg-black text-white rounded-lg px-4 py-2">
+                <button className="bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 shadow">
                   Guardar
                 </button>
               </div>
             </form>
 
-            <div className="bg-white p-4 rounded-xl shadow overflow-x-auto">
+            <div className="bg-surface-200 p-4 rounded-xl shadow-card border border-surface-400 overflow-x-auto">
               <table className="min-w-full text-sm">
-                <thead className="border-b">
+                <thead className="border-b border-surface-400 text-gray-200">
                   <tr>
                     <th className="py-2 px-2 text-left">#</th>
                     <th className="py-2 px-2 text-left">Nombre</th>
@@ -308,9 +308,9 @@ export default function Usuarios() {
                     <th className="py-2 px-2 text-left">Creado por</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="text-gray-100">
                   {employees.map((e) => (
-                    <tr key={e.id} className="border-b">
+                    <tr key={e.id} className="border-b border-surface-400/70">
                       <td className="py-2 px-2">{e.id}</td>
                       <td className="py-2 px-2">
                         {e.apellido}, {e.nombre}
@@ -340,15 +340,15 @@ export default function Usuarios() {
             {/* crear usuario directo */}
             <form
               onSubmit={submitUsuario}
-              className="bg-white p-4 rounded-xl shadow grid md:grid-cols-4 gap-3"
+              className="bg-surface-200 p-4 rounded-xl shadow-card border border-surface-400 grid md:grid-cols-4 gap-3"
             >
               <div className="md:col-span-4">
-                <h2 className="font-semibold">Crear usuario del sistema</h2>
+                <h2 className="font-semibold text-white">Crear usuario del sistema</h2>
               </div>
               <div>
-                <label className="text-sm">Email</label>
+                <label className="text-sm text-gray-300">Email</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={userForm.email}
                   onChange={(e) =>
                     setUserForm({ ...userForm, email: e.target.value })
@@ -357,9 +357,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Nombre completo</label>
+                <label className="text-sm text-gray-300">Nombre completo</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={userForm.full_name}
                   onChange={(e) =>
                     setUserForm({ ...userForm, full_name: e.target.value })
@@ -368,10 +368,10 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Contraseña</label>
+                <label className="text-sm text-gray-300">Contraseña</label>
                 <input
                   type="password"
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={userForm.password}
                   onChange={(e) =>
                     setUserForm({ ...userForm, password: e.target.value })
@@ -380,9 +380,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Rol</label>
+                <label className="text-sm text-gray-300">Rol</label>
                 <select
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={userForm.role}
                   onChange={(e) =>
                     setUserForm({ ...userForm, role: e.target.value })
@@ -394,9 +394,9 @@ export default function Usuarios() {
                 </select>
               </div>
               <div>
-                <label className="text-sm">Asociar a empleado (opcional)</label>
+                <label className="text-sm text-gray-300">Asociar a empleado (opcional)</label>
                 <select
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={userForm.employee_id}
                   onChange={(e) =>
                     setUserForm({ ...userForm, employee_id: e.target.value })
@@ -411,7 +411,7 @@ export default function Usuarios() {
                 </select>
               </div>
               <div className="md:col-span-4 flex justify-end">
-                <button className="bg-black text-white px-4 py-2 rounded-lg">
+                <button className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg shadow">
                   Crear usuario
                 </button>
               </div>
@@ -420,15 +420,15 @@ export default function Usuarios() {
             {/* crear usuario desde empleado */}
             <form
               onSubmit={submitDesdeEmpleado}
-              className="bg-white p-4 rounded-xl shadow grid md:grid-cols-4 gap-3"
+              className="bg-surface-200 p-4 rounded-xl shadow-card border border-surface-400 grid md:grid-cols-4 gap-3"
             >
               <div className="md:col-span-4">
-                <h2 className="font-semibold">Crear usuario desde empleado</h2>
+                <h2 className="font-semibold text-white">Crear usuario desde empleado</h2>
               </div>
               <div>
-                <label className="text-sm">Empleado</label>
+                <label className="text-sm text-gray-300">Empleado</label>
                 <select
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={fromEmp.employee_id}
                   onChange={(e) =>
                     setFromEmp({ ...fromEmp, employee_id: e.target.value })
@@ -443,9 +443,9 @@ export default function Usuarios() {
                 </select>
               </div>
               <div>
-                <label className="text-sm">Email de acceso</label>
+                <label className="text-sm text-gray-300">Email de acceso</label>
                 <input
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={fromEmp.email}
                   onChange={(e) =>
                     setFromEmp({ ...fromEmp, email: e.target.value })
@@ -454,10 +454,10 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Contraseña</label>
+                <label className="text-sm text-gray-300">Contraseña</label>
                 <input
                   type="password"
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={fromEmp.password}
                   onChange={(e) =>
                     setFromEmp({ ...fromEmp, password: e.target.value })
@@ -466,9 +466,9 @@ export default function Usuarios() {
                 />
               </div>
               <div>
-                <label className="text-sm">Rol</label>
+                <label className="text-sm text-gray-300">Rol</label>
                 <select
-                  className="border rounded-lg px-3 py-2 w-full"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
                   value={fromEmp.role}
                   onChange={(e) =>
                     setFromEmp({ ...fromEmp, role: e.target.value })
@@ -480,16 +480,16 @@ export default function Usuarios() {
                 </select>
               </div>
               <div className="md:col-span-4 flex justify-end">
-                <button className="bg-black text-white px-4 py-2 rounded-lg">
+                <button className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg shadow">
                   Crear desde empleado
                 </button>
               </div>
             </form>
 
             {/* tabla de usuarios */}
-            <div className="bg-white p-4 rounded-xl shadow overflow-x-auto">
+            <div className="bg-surface-200 p-4 rounded-xl shadow-card border border-surface-400 overflow-x-auto">
               <table className="min-w-full text-sm">
-                <thead className="border-b">
+                <thead className="border-b border-surface-400 text-gray-200">
                   <tr>
                     <th className="py-2 px-2 text-left">#</th>
                     <th className="py-2 px-2 text-left">Email</th>
@@ -498,9 +498,9 @@ export default function Usuarios() {
                     <th className="py-2 px-2 text-left">Empleado</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="text-gray-100">
                   {users.map((u) => (
-                    <tr key={u.id} className="border-b">
+                    <tr key={u.id} className="border-b border-surface-400/70">
                       <td className="py-2 px-2">{u.id}</td>
                       <td className="py-2 px-2">{u.email}</td>
                       <td className="py-2 px-2">{u.full_name}</td>

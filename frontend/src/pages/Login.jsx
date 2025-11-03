@@ -30,25 +30,35 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow p-8">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Ingresar</h2>
-        <form onSubmit={onSubmit} className="space-y-3">
-          <input
-            className="w-full border rounded-lg px-3 py-2"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            className="w-full border rounded-lg px-3 py-2"
-            placeholder="Contraseña"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {err && <div className="text-red-600 text-sm">{err}</div>}
-          <button className="w-full bg-black text-white rounded-lg py-2 hover:opacity-90">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-surface-100 to-surface-50 px-4">
+      <div className="w-full max-w-md bg-surface-200 border border-surface-400 rounded-2xl shadow-card p-8">
+        <div className="text-center mb-6">
+          <div className="mx-auto mb-2 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white font-bold">
+            A
+          </div>
+          <h2 className="text-2xl font-semibold text-white">Alcorta</h2>
+          <p className="text-sm text-gray-300">Ingresá a tu cuenta</p>
+        </div>
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div>
+            <input
+              className="w-full border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <input
+              className="w-full border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+              placeholder="Contraseña"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {err && <div className="text-danger-500 text-sm">{err}</div>}
+          <button className="w-full bg-brand-600 hover:bg-brand-700 text-white rounded-lg py-2 shadow">
             Entrar
           </button>
         </form>

@@ -56,18 +56,18 @@ export default function Proveedores() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-surface-100 to-surface-50 text-gray-100 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         <AppHeader title="Proveedores" />
 
         <form
           onSubmit={onSubmit}
-          className="bg-white p-4 rounded-xl shadow grid md:grid-cols-3 gap-3"
+          className="bg-surface-200 p-4 rounded-xl shadow-card border border-surface-400 grid md:grid-cols-3 gap-3"
         >
           <div className="md:col-span-2">
-            <label className="text-sm">Razón social</label>
+            <label className="text-sm text-gray-300">Razón social</label>
             <input
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={form.razon_social}
               onChange={(e) =>
                 setForm({ ...form, razon_social: e.target.value })
@@ -76,26 +76,26 @@ export default function Proveedores() {
             />
           </div>
           <div>
-            <label className="text-sm">CUIT</label>
+            <label className="text-sm text-gray-300">CUIT</label>
             <input
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={form.cuit}
               onChange={(e) => setForm({ ...form, cuit: e.target.value })}
               required
             />
           </div>
           <div>
-            <label className="text-sm">Ing. Brutos</label>
+            <label className="text-sm text-gray-300">Ing. Brutos</label>
             <input
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={form.iibb}
               onChange={(e) => setForm({ ...form, iibb: e.target.value })}
             />
           </div>
           <div>
-            <label className="text-sm">Condición IVA</label>
+            <label className="text-sm text-gray-300">Condición IVA</label>
             <select
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={form.condicion_iva}
               onChange={(e) =>
                 setForm({ ...form, condicion_iva: e.target.value })
@@ -108,25 +108,25 @@ export default function Proveedores() {
             </select>
           </div>
           <div>
-            <label className="text-sm">Teléfono</label>
+            <label className="text-sm text-gray-300">Teléfono</label>
             <input
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={form.telefono}
               onChange={(e) => setForm({ ...form, telefono: e.target.value })}
             />
           </div>
           <div>
-            <label className="text-sm">Email</label>
+            <label className="text-sm text-gray-300">Email</label>
             <input
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
           </div>
           <div className="md:col-span-2">
-            <label className="text-sm">Dirección</label>
+            <label className="text-sm text-gray-300">Dirección</label>
             <input
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={form.direccion}
               onChange={(e) =>
                 setForm({ ...form, direccion: e.target.value })
@@ -134,9 +134,9 @@ export default function Proveedores() {
             />
           </div>
           <div>
-            <label className="text-sm">Localidad</label>
+            <label className="text-sm text-gray-300">Localidad</label>
             <input
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={form.localidad}
               onChange={(e) =>
                 setForm({ ...form, localidad: e.target.value })
@@ -144,9 +144,9 @@ export default function Proveedores() {
             />
           </div>
           <div>
-            <label className="text-sm">Provincia</label>
+            <label className="text-sm text-gray-300">Provincia</label>
             <input
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={form.provincia}
               onChange={(e) =>
                 setForm({ ...form, provincia: e.target.value })
@@ -154,32 +154,32 @@ export default function Proveedores() {
             />
           </div>
           <div>
-            <label className="text-sm">Contacto</label>
+            <label className="text-sm text-gray-300">Contacto</label>
             <input
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={form.contacto}
               onChange={(e) => setForm({ ...form, contacto: e.target.value })}
             />
           </div>
           <div className="md:col-span-3">
-            <label className="text-sm">Notas</label>
+            <label className="text-sm text-gray-300">Notas</label>
             <textarea
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               rows={2}
               value={form.notas}
               onChange={(e) => setForm({ ...form, notas: e.target.value })}
             />
           </div>
           <div className="md:col-span-3 flex justify-end">
-            <button className="bg-black text-white rounded-lg px-4 py-2">
+            <button className="bg-brand-600 hover:bg-brand-700 text-white rounded-lg px-4 py-2 shadow">
               Guardar
             </button>
           </div>
         </form>
 
-        <div className="bg-white p-4 rounded-xl shadow overflow-x-auto">
+        <div className="bg-surface-200 p-4 rounded-xl shadow-card border border-surface-400 overflow-x-auto">
           <table className="min-w-full text-sm">
-            <thead className="border-b">
+            <thead className="border-b border-surface-400 text-gray-200">
               <tr>
                 <th className="py-2 px-2 text-left">#</th>
                 <th className="py-2 px-2 text-left">Razón social</th>
@@ -189,9 +189,9 @@ export default function Proveedores() {
                 <th className="py-2 px-2 text-left">Creado por</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-gray-100">
               {items.map((p) => (
-                <tr key={p.id} className="border-b">
+                <tr key={p.id} className="border-b border-surface-400/70">
                   <td className="py-2 px-2">{p.id}</td>
                   <td className="py-2 px-2">{p.razon_social}</td>
                   <td className="py-2 px-2">{p.cuit}</td>

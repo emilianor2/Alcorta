@@ -43,34 +43,34 @@ export default function Reportes() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-surface-100 to-surface-50 text-gray-100 p-6">
       <div className="max-w-5xl mx-auto space-y-6">
         <AppHeader title="Reportes de caja" />
 
         {/* Filtros */}
-        <div className="bg-white p-4 rounded-xl shadow flex flex-wrap gap-3 items-end">
+        <div className="bg-surface-200 border border-surface-400 p-4 rounded-xl shadow-card flex flex-wrap gap-3 items-end">
           <div>
-            <label className="block text-sm mb-1">Desde</label>
+            <label className="block text-sm mb-1 text-gray-300">Desde</label>
             <input
               type="date"
-              className="border rounded-lg px-3 py-2"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2"
               value={from}
               onChange={(e) => setFrom(e.target.value)}
             />
           </div>
           <div>
-            <label className="block text-sm mb-1">Hasta</label>
+            <label className="block text-sm mb-1 text-gray-300">Hasta</label>
             <input
               type="date"
-              className="border rounded-lg px-3 py-2"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2"
               value={to}
               onChange={(e) => setTo(e.target.value)}
             />
           </div>
           <div>
-            <label className="block text-sm mb-1">Turno</label>
+            <label className="block text-sm mb-1 text-gray-300">Turno</label>
             <select
-              className="border rounded-lg px-3 py-2"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2"
               value={shift}
               onChange={(e) => setShift(e.target.value)}
             >
@@ -81,7 +81,7 @@ export default function Reportes() {
             </select>
           </div>
           <button
-            className="bg-black text-white px-4 py-2 rounded-lg"
+            className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg shadow"
             onClick={load}
             disabled={loading}
           >
@@ -91,33 +91,33 @@ export default function Reportes() {
 
         {/* LISTA DE CAJAS */}
         {!cajas.length && !loading && (
-          <p className="text-gray-500">No hay cajas en ese rango.</p>
+          <p className="text-gray-400">No hay cajas en ese rango.</p>
         )}
 
         <div className="space-y-6">
           {cajas.map((box) => (
             <div
               key={box.cash.id}
-              className="bg-white rounded-xl shadow p-4 space-y-4"
+              className="bg-surface-200 border border-surface-400 rounded-xl shadow-card p-4 space-y-4"
             >
               {/* encabezado de la caja */}
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-lg font-semibold">
+                  <h2 className="text-lg font-semibold text-white">
                     Caja #{box.cash.id} — Turno {box.cash.shift_number}
                   </h2>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-300">
                     Apertura: {formatDate(box.cash.opened_at)} — $
                     {Number(box.cash.opening_amount).toFixed(2)}
                   </p>
                   {box.cash.status === "cerrada" && (
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-300">
                       Cierre: {formatDate(box.cash.closed_at)} — $
                       {Number(box.cash.closing_amount || 0).toFixed(2)}
                     </p>
                   )}
                 </div>
-                <div className="text-right text-sm text-gray-500">
+                <div className="text-right text-sm text-gray-300">
                   <p>Abrió: {box.cash.opened_by_name || "-"}</p>
                   {box.cash.closed_by_name && (
                     <p>Cerró: {box.cash.closed_by_name}</p>
@@ -125,8 +125,8 @@ export default function Reportes() {
                   <p
                     className={
                       box.cash.status === "abierta"
-                        ? "text-green-600"
-                        : "text-red-500"
+                        ? "text-green-500"
+                        : "text-danger-500"
                     }
                   >
                     {box.cash.status}
@@ -136,10 +136,10 @@ export default function Reportes() {
 
               {/* ventas de la caja */}
               <div>
-                <h3 className="font-medium mb-2">Ventas</h3>
+                <h3 className="font-medium mb-2 text-white">Ventas</h3>
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-sm">
-                    <thead className="border-b bg-gray-50">
+                    <thead className="border-b border-surface-400 bg-surface-300 text-gray-200">
                       <tr>
                         <th className="py-1 px-2 text-left">#</th>
                         <th className="py-1 px-2 text-left">Fecha</th>
@@ -148,10 +148,10 @@ export default function Reportes() {
                         <th className="py-1 px-2 text-left">Total</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="text-gray-100">
                       {box.sales.length ? (
                         box.sales.map((s) => (
-                          <tr key={s.id} className="border-b">
+                          <tr key={s.id} className="border-b border-surface-400/70">
                             <td className="py-1 px-2">{s.id}</td>
                             <td className="py-1 px-2">
                               {formatDate(s.created_at)}
@@ -181,10 +181,10 @@ export default function Reportes() {
 
               {/* movimientos de la caja */}
               <div>
-                <h3 className="font-medium mb-2">Movimientos de caja</h3>
+                <h3 className="font-medium mb-2 text-white">Movimientos de caja</h3>
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-sm">
-                    <thead className="border-b bg-gray-50">
+                    <thead className="border-b border-surface-400 bg-surface-300 text-gray-200">
                       <tr>
                         <th className="py-1 px-2 text-left">#</th>
                         <th className="py-1 px-2 text-left">Fecha</th>
@@ -194,10 +194,10 @@ export default function Reportes() {
                         <th className="py-1 px-2 text-left">Monto</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="text-gray-100">
                       {box.movements.length ? (
                         box.movements.map((m) => (
-                          <tr key={m.id} className="border-b">
+                          <tr key={m.id} className="border-b border-surface-400/70">
                             <td className="py-1 px-2">{m.id}</td>
                             <td className="py-1 px-2">
                               {formatDate(m.created_at)}
@@ -227,10 +227,9 @@ export default function Reportes() {
               </div>
 
               {/* mini resumen de la caja */}
-              <div className="pt-2 border-t flex gap-6 text-sm text-gray-700">
+              <div className="pt-2 border-t border-surface-400 flex gap-6 text-sm text-gray-200">
                 <p>
-                  Ventas:{" "}
-                  <b>
+                  Ventas: <b>
                     $
                     {box.sales
                       .reduce((acc, s) => acc + Number(s.total || 0), 0)
@@ -238,8 +237,7 @@ export default function Reportes() {
                   </b>
                 </p>
                 <p>
-                  Ingresos manuales:{" "}
-                  <b>
+                  Ingresos manuales: <b>
                     $
                     {box.movements
                       .filter((m) => m.type === "ingreso")
@@ -248,8 +246,7 @@ export default function Reportes() {
                   </b>
                 </p>
                 <p>
-                  Egresos:{" "}
-                  <b>
+                  Egresos: <b>
                     $
                     {box.movements
                       .filter((m) => m.type === "egreso")

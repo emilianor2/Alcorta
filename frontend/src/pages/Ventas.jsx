@@ -4,6 +4,8 @@ import AppHeader from "../components/AppHeader.jsx";
 
 export default function Ventas() {
   const [productos, setProductos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [categoriaSel, setCategoriaSel] = useState("");
   const [carrito, setCarrito] = useState([]);
   const [pay, setPay] = useState("efectivo");
   const [sending, setSending] = useState(false);
@@ -17,7 +19,13 @@ export default function Ventas() {
           api.get("/products"),
           api.get("/cash/current"),
         ]);
-        setProductos(prodsRes.data.items || []);
+        const items = prodsRes.data.items || [];
+        setProductos(items);
+        const cats = Array.from(
+          new Set(items.map((p) => (p.category || "").trim()).filter(Boolean))
+        ).sort((a, b) => a.localeCompare(b, "es"));
+        setCategorias(cats);
+        if (!categoriaSel && cats.length) setCategoriaSel(cats[0]);
         setCashOpen(!!cashRes.data.session);
       } catch (err) {
         console.error("Error al cargar productos/caja", err);
@@ -92,7 +100,7 @@ export default function Ventas() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-surface-100 to-surface-50 text-gray-100 p-6">
       {/* header arriba, solo una fila */}
       <div className="max-w-6xl mx-auto mb-6">
         <AppHeader title="Ventas" />
@@ -103,24 +111,47 @@ export default function Ventas() {
         {/* Productos */}
         <section className="md:col-span-2">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Productos</h2>
+            <h2 className="text-xl font-semibold text-white">Productos</h2>
             {!cashOpen && (
-              <span className="text-sm text-red-600">
+              <span className="text-sm text-danger-500">
                 Caja cerrada – no se puede vender
               </span>
             )}
           </div>
+          {/* Tabs de categorías */}
+          {categorias.length > 0 && (
+            <div className="mb-4">
+              <div className="flex flex-wrap gap-2">
+                {categorias.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setCategoriaSel(cat)}
+                    className={`px-3 py-1.5 rounded-lg border text-sm whitespace-nowrap ${
+                      categoriaSel === cat
+                        ? "bg-brand-600 hover:bg-brand-700 text-white border-brand-600"
+                        : "border-surface-400 bg-surface-300 hover:bg-surface-400 text-gray-100"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {productos.map((p) => (
+            {productos
+              .filter((p) => !categoriaSel || p.category === categoriaSel)
+              .map((p) => (
               <div
                 key={p.id}
-                className="bg-white p-4 rounded-xl shadow hover:shadow-lg transition"
+                className="bg-surface-200 border border-surface-400 p-4 rounded-xl shadow-card hover:shadow-lg transition"
               >
-                <h3 className="font-medium">{p.name}</h3>
-                <p className="text-gray-600">${Number(p.price).toFixed(2)}</p>
+                <h3 className="font-medium text-white">{p.name}</h3>
+                <p className="text-gray-400 text-xs mb-1">{p.category}</p>
+                <p className="text-gray-200">${Number(p.price).toFixed(2)}</p>
                 <button
                   onClick={() => agregar(p)}
-                  className="mt-3 w-full bg-black text-white py-2 rounded-lg hover:opacity-90"
+                  className="mt-3 w-full bg-brand-600 hover:bg-brand-700 text-white py-2 rounded-lg shadow"
                   disabled={!cashOpen}
                 >
                   Agregar
@@ -128,7 +159,7 @@ export default function Ventas() {
               </div>
             ))}
             {!productos.length && (
-              <p className="text-gray-500 col-span-full">
+              <p className="text-gray-400 col-span-full">
                 No hay productos cargados.
               </p>
             )}
@@ -136,26 +167,26 @@ export default function Ventas() {
         </section>
 
         {/* Carrito */}
-        <aside className="bg-white rounded-xl shadow p-5">
-          <h2 className="text-xl font-semibold mb-3">Carrito</h2>
+        <aside className="bg-surface-200 border border-surface-400 rounded-xl shadow-card p-5">
+          <h2 className="text-xl font-semibold mb-3 text-white">Carrito</h2>
           {carrito.length === 0 ? (
-            <p className="text-gray-500">Sin productos aún.</p>
+            <p className="text-gray-400">Sin productos aún.</p>
           ) : (
-            <ul className="divide-y">
+            <ul className="divide-y divide-surface-400/60">
               {carrito.map((item) => (
                 <li
                   key={item.id}
                   className="py-2 flex justify-between items-center"
                 >
                   <div>
-                    <p className="font-medium">{item.name}</p>
-                    <small className="text-gray-500">
+                    <p className="font-medium text-white">{item.name}</p>
+                    <small className="text-gray-400">
                       x{item.cantidad} — ${Number(item.price).toFixed(2)}
                     </small>
                   </div>
                   <button
                     onClick={() => quitar(item.id)}
-                    className="text-red-600 hover:underline"
+                    className="text-danger-500 hover:underline"
                   >
                     Quitar
                   </button>
@@ -166,9 +197,9 @@ export default function Ventas() {
 
           {/* medio de pago */}
           <div className="mt-4">
-            <label className="block text-sm mb-1">Medio de pago</label>
+            <label className="block text-sm mb-1 text-gray-300">Medio de pago</label>
             <select
-              className="border rounded-lg px-3 py-2 w-full"
+              className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 w-full"
               value={pay}
               onChange={(e) => setPay(e.target.value)}
             >
@@ -178,7 +209,7 @@ export default function Ventas() {
           </div>
 
           {/* total */}
-          <div className="border-t mt-3 pt-3 flex justify-between font-semibold">
+          <div className="border-t border-surface-400 mt-3 pt-3 flex justify-between font-semibold text-white">
             <span>Total:</span>
             <span>${total.toFixed(2)}</span>
           </div>
@@ -186,7 +217,7 @@ export default function Ventas() {
           {/* botón */}
           <button
             disabled={carrito.length === 0 || !cashOpen || sending}
-            className={`mt-4 w-full bg-black text-white py-2 rounded-lg hover:opacity-90
+            className={`mt-4 w-full bg-brand-600 hover:bg-brand-700 text-white py-2 rounded-lg shadow
               ${
                 carrito.length === 0 || !cashOpen || sending
                   ? "opacity-40 cursor-not-allowed"

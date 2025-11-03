@@ -88,28 +88,27 @@ export default function Caja() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-surface-100 to-surface-50 text-gray-100 p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         <AppHeader title="Caja" />
 
         {/* Si no hay caja abierta todavía */}
         {!session ? (
-          <div className="bg-white p-6 rounded-xl shadow text-center">
-            <h2 className="text-lg mb-2 font-medium">No hay caja abierta</h2>
-            <p className="text-gray-500">
+          <div className="bg-surface-200 border border-surface-400 p-6 rounded-xl shadow-card text-center">
+            <h2 className="text-lg mb-2 font-medium text-white">No hay caja abierta</h2>
+            <p className="text-gray-400">
               Debés abrir la caja desde el inicio para empezar un nuevo turno.
             </p>
           </div>
         ) : (
-          <div className="bg-white p-6 rounded-xl shadow space-y-4">
+          <div className="bg-surface-200 border border-surface-400 p-6 rounded-xl shadow-card space-y-4">
             {/* Cabecera */}
             <div className="flex justify-between items-center">
               <div>
-                <h2 className="text-lg font-medium">
-                  Caja #{session.id} — T{session.shift_number} —{" "}
-                  {session.status}
+                <h2 className="text-lg font-medium text-white">
+                  Caja #{session.id} — T{session.shift_number} — {session.status}
                 </h2>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-400">
                   Apertura: {new Date(session.opened_at).toLocaleString()} — $
                   {Number(session.opening_amount).toFixed(2)}
                 </p>
@@ -118,14 +117,14 @@ export default function Caja() {
                 <div className="flex gap-2">
                   <input
                     type="number"
-                    className="border rounded-lg px-3 py-2"
+                    className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2"
                     placeholder="Monto cierre"
                     value={montoCierre}
                     onChange={(e) => setMontoCierre(e.target.value)}
                   />
                   <button
                     onClick={cerrarCaja}
-                    className="bg-red-600 text-white px-4 py-2 rounded-lg"
+                    className="bg-danger-600 hover:bg-danger-700 text-white px-4 py-2 rounded-lg shadow"
                   >
                     Cerrar
                   </button>
@@ -136,23 +135,23 @@ export default function Caja() {
             {/* ⚠️ Si la caja está abierta pero sin monto */}
             {session.status === "abierta" &&
               Number(session.opening_amount) === 0 && (
-                <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-4">
-                  <h3 className="font-semibold mb-2">
+                <div className="bg-surface-300/60 border border-brand-500/30 rounded-lg p-4">
+                  <h3 className="font-semibold mb-2 text-white">
                     Registrar monto de apertura
                   </h3>
-                  <p className="text-sm text-gray-600 mb-3">
+                  <p className="text-sm text-gray-300 mb-3">
                     Ingresá el monto inicial con el que se empieza el turno.
                   </p>
                   <input
                     type="number"
                     placeholder="Monto de apertura"
-                    className="border rounded-lg px-3 py-2 mr-2"
+                    className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 mr-2"
                     value={montoApertura}
                     onChange={(e) => setMontoApertura(e.target.value)}
                   />
                   <button
                     onClick={registrarApertura}
-                    className="bg-black text-white px-4 py-2 rounded-lg"
+                    className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg shadow"
                   >
                     Guardar apertura
                   </button>
@@ -165,13 +164,13 @@ export default function Caja() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => crearMovimiento("ingreso")}
-                    className="px-3 py-2 border rounded-lg"
+                    className="px-3 py-2 border border-surface-400 bg-surface-300 hover:bg-surface-400 text-gray-100 rounded-lg"
                   >
                     + Ingreso
                   </button>
                   <button
                     onClick={() => crearMovimiento("egreso")}
-                    className="px-3 py-2 border rounded-lg"
+                    className="px-3 py-2 border border-surface-400 bg-surface-300 hover:bg-surface-400 text-gray-100 rounded-lg"
                   >
                     – Egreso
                   </button>
@@ -180,18 +179,18 @@ export default function Caja() {
 
             {/* Lista de movimientos */}
             <div>
-              <h3 className="font-medium mt-4 mb-2">Movimientos</h3>
-              <ul className="divide-y">
+              <h3 className="font-medium mt-4 mb-2 text-white">Movimientos</h3>
+              <ul className="divide-y divide-surface-400/60">
                 {movs.map((m) => (
                   <li key={m.id} className="py-2 flex justify-between">
-                    <span>
+                    <span className="text-gray-200">
                       {m.type} — {m.reference || "sin referencia"}
                     </span>
-                    <span>${Number(m.amount).toFixed(2)}</span>
+                    <span className="text-gray-100">${Number(m.amount).toFixed(2)}</span>
                   </li>
                 ))}
                 {!movs.length && (
-                  <p className="text-gray-400">Sin movimientos.</p>
+                  <p className="text-gray-500">Sin movimientos.</p>
                 )}
               </ul>
             </div>
