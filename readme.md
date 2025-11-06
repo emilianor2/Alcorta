@@ -201,9 +201,11 @@ CREATE TABLE IF NOT EXISTS cash_movements (
   amount DECIMAL(10,2) NOT NULL,
   reference VARCHAR(255) DEFAULT NULL,
   user_id INT DEFAULT NULL,
+  supplier_id INT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (session_id) REFERENCES cash_sessions(id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 -- =========================================

@@ -100,9 +100,10 @@ router.post("/close/:id", async (req, res) => {
 router.get("/movements/:sessionId", async (req, res) => {
   const { sessionId } = req.params;
   const [rows] = await pool.query(
-    `SELECT m.*, u.full_name AS user_name
+    `SELECT m.*, u.full_name AS user_name, s.razon_social AS supplier_name
      FROM cash_movements m
      LEFT JOIN users u ON u.id = m.user_id
+     LEFT JOIN suppliers s ON s.id = m.supplier_id
      WHERE m.session_id = ?
      ORDER BY m.id DESC`,
     [sessionId]
@@ -112,10 +113,10 @@ router.get("/movements/:sessionId", async (req, res) => {
 
 /**
  * POST /api/cash/movement/manual
- * body: { type, amount, reference }
+ * body: { type, amount, reference, supplier_id }
  */
 router.post("/movement/manual", async (req, res) => {
-  const { type = "ingreso", amount, reference = "" } = req.body || {};
+  const { type = "ingreso", amount, reference = "", supplier_id = null } = req.body || {};
   const userId = req.user.id;            // 👈 quién hizo el mov
 
   if (!amount) {
@@ -127,11 +128,36 @@ router.post("/movement/manual", async (req, res) => {
     return res.status(400).json({ ok: false, error: "NO_CASH_OPEN" });
   }
 
-  await pool.query(
-    `INSERT INTO cash_movements (session_id, type, amount, reference, user_id, created_at)
-     VALUES (?,?,?,?,?, NOW())`,
-    [session.id, type, Number(amount), reference, userId]
-  );
+  // Verificar si supplier_id existe si se proporciona
+  if (supplier_id) {
+    const [supplierRows] = await pool.query(
+      "SELECT id FROM suppliers WHERE id = ?",
+      [supplier_id]
+    );
+    if (!supplierRows.length) {
+      return res.status(400).json({ ok: false, error: "SUPPLIER_NOT_FOUND" });
+    }
+  }
+
+  // Intentar insertar con supplier_id (si la columna existe) o sin ella
+  try {
+    await pool.query(
+      `INSERT INTO cash_movements (session_id, type, amount, reference, user_id, supplier_id, created_at)
+       VALUES (?,?,?,?,?,?, NOW())`,
+      [session.id, type, Number(amount), reference, userId, supplier_id || null]
+    );
+  } catch (err) {
+    // Si la columna supplier_id no existe, insertar sin ella
+    if (err.code === "ER_BAD_FIELD_ERROR") {
+      await pool.query(
+        `INSERT INTO cash_movements (session_id, type, amount, reference, user_id, created_at)
+         VALUES (?,?,?,?,?, NOW())`,
+        [session.id, type, Number(amount), reference, userId]
+      );
+    } else {
+      throw err;
+    }
+  }
 
   res.status(201).json({ ok: true });
 });
