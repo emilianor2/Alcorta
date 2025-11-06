@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import logo from "../assets/alcorta.png";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -33,10 +34,12 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-surface-100 to-surface-50 px-4">
       <div className="w-full max-w-md bg-surface-200 border border-surface-400 rounded-2xl shadow-card p-8">
         <div className="text-center mb-6">
-          <div className="mx-auto mb-2 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white font-bold">
-            A
-          </div>
-          <h2 className="text-2xl font-semibold text-white">Alcorta</h2>
+          <img 
+            src={logo} 
+            alt="Alcorta Logo" 
+            className="mx-auto mb-4 h-64 w-64 object-contain"
+            style={{ background: 'transparent' }}
+          />
           <p className="text-sm text-gray-300">Ingresá a tu cuenta</p>
         </div>
         <form onSubmit={onSubmit} className="space-y-4">
