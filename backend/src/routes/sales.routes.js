@@ -133,9 +133,12 @@ router.get("/", async (req, res) => {
       s.created_at,
       s.cash_session_id,
       s.shift_number,
-      u.full_name AS user_name
+      u.full_name AS user_name,
+      COALESCE(c.razon_social, 'Consumidor Final') AS customer_name
     FROM sales s
     LEFT JOIN users u ON u.id = s.user_id
+    LEFT JOIN invoices i ON i.sale_id = s.id
+    LEFT JOIN customers c ON c.id = i.customer_id
     ${whereSQL}
     ORDER BY s.created_at DESC
     `,

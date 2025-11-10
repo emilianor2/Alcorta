@@ -10,7 +10,8 @@ export default function Caja() {
   const [montoCierre, setMontoCierre] = useState("");
   const [movs, setMovs] = useState([]);
   const [proveedores, setProveedores] = useState([]);
-  const [editingRow, setEditingRow] = useState(null); // { type: 'ingreso'|'egreso', amount: '', reference: '', supplier_id: '' }
+  // { type: 'ingreso'|'egreso', amount: '', reference: '', supplier_id: '' }
+  const [editingRow, setEditingRow] = useState(null);
   const navigate = useNavigate();
 
   async function loadSession() {
@@ -38,20 +39,17 @@ export default function Caja() {
     loadProveedores();
   }, []);
 
-  // ✅ Nuevo: registrar monto inicial
+  // Registrar monto inicial (se guarda como movimiento + setea opening_amount)
   async function registrarApertura() {
     if (!montoApertura || Number(montoApertura) <= 0) {
       return alert("Ingresá un monto válido");
     }
     try {
-      // crea un movimiento de apertura (para registro histórico)
       await api.post(`/cash/movement/manual`, {
         type: "ingreso",
         amount: Number(montoApertura),
         reference: "Apertura de caja",
       });
-
-      // actualiza el campo opening_amount en la sesión
       await api.post(`/cash/opening/${session.id}`, {
         amount: Number(montoApertura),
       });
@@ -120,7 +118,7 @@ export default function Caja() {
       <div className="max-w-4xl mx-auto space-y-6">
         <AppHeader title="Caja" />
 
-        {/* Si no hay caja abierta todavía */}
+        {/* Sin caja abierta */}
         {!session ? (
           <div className="bg-surface-200 border border-surface-400 p-6 rounded-xl shadow-card text-center">
             <h2 className="text-lg mb-2 font-medium text-white">No hay caja abierta</h2>
@@ -160,33 +158,30 @@ export default function Caja() {
               )}
             </div>
 
-            {/* ⚠️ Si la caja está abierta pero sin monto */}
-            {session.status === "abierta" &&
-              Number(session.opening_amount) === 0 && (
-                <div className="bg-surface-300/60 border border-brand-500/30 rounded-lg p-4">
-                  <h3 className="font-semibold mb-2 text-white">
-                    Registrar monto de apertura
-                  </h3>
-                  <p className="text-sm text-gray-300 mb-3">
-                    Ingresá el monto inicial con el que se empieza el turno.
-                  </p>
-                  <input
-                    type="number"
-                    placeholder="Monto de apertura"
-                    className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 mr-2"
-                    value={montoApertura}
-                    onChange={(e) => setMontoApertura(e.target.value)}
-                  />
-                  <button
-                    onClick={registrarApertura}
-                    className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg shadow"
-                  >
-                    Guardar apertura
-                  </button>
-                </div>
-              )}
+            {/* Cuando la caja está abierta pero sin monto */}
+            {session.status === "abierta" && Number(session.opening_amount) === 0 && (
+              <div className="bg-surface-300/60 border border-brand-500/30 rounded-lg p-4">
+                <h3 className="font-semibold mb-2 text-white">Registrar monto de apertura</h3>
+                <p className="text-sm text-gray-300 mb-3">
+                  Ingresá el monto inicial con el que se empieza el turno.
+                </p>
+                <input
+                  type="number"
+                  placeholder="Monto de apertura"
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2 mr-2"
+                  value={montoApertura}
+                  onChange={(e) => setMontoApertura(e.target.value)}
+                />
+                <button
+                  onClick={registrarApertura}
+                  className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg shadow"
+                >
+                  Guardar apertura
+                </button>
+              </div>
+            )}
 
-            {/* Tabla de movimientos */}
+            {/* Movimientos */}
             <div>
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-medium text-white">Movimientos</h3>
@@ -209,6 +204,7 @@ export default function Caja() {
                     </div>
                   )}
               </div>
+
               <div className="bg-surface-300/50 border border-surface-400 rounded-lg overflow-hidden">
                 <table className="min-w-full text-sm">
                   <thead className="bg-surface-400/50 border-b border-surface-400">
@@ -216,6 +212,7 @@ export default function Caja() {
                       <th className="py-2 px-3 text-left text-gray-200">Tipo</th>
                       <th className="py-2 px-3 text-left text-gray-200">Referencia</th>
                       <th className="py-2 px-3 text-left text-gray-200">Proveedor</th>
+                      <th className="py-2 px-3 text-left text-gray-200">Cliente</th>
                       <th className="py-2 px-3 text-right text-gray-200">Monto</th>
                     </tr>
                   </thead>
@@ -259,6 +256,9 @@ export default function Caja() {
                           )}
                         </td>
                         <td className="py-2 px-3">
+                          <span className="text-gray-400">-</span>
+                        </td>
+                        <td className="py-2 px-3">
                           <div className="flex items-center gap-2 justify-end">
                             <input
                               type="number"
@@ -286,9 +286,13 @@ export default function Caja() {
                         </td>
                       </tr>
                     )}
+
                     {/* Movimientos existentes */}
                     {movs.map((m) => (
-                      <tr key={m.id} className="border-b border-surface-400/60 hover:bg-surface-400/30">
+                      <tr
+                        key={m.id}
+                        className="border-b border-surface-400/60 hover:bg-surface-400/30"
+                      >
                         <td className="py-2 px-3 text-gray-200 capitalize">{m.type}</td>
                         <td className="py-2 px-3 text-gray-200">
                           {m.reference || <span className="text-gray-500">Sin referencia</span>}
@@ -296,6 +300,11 @@ export default function Caja() {
                         <td className="py-2 px-3 text-gray-200">
                           {m.supplier_name || <span className="text-gray-500">-</span>}
                         </td>
+                        <td className="py-2 px-3 text-gray-200">
+  {m.type === "venta"
+    ? (m.customer_name || "Consumidor Final")
+    : <span className="text-gray-500">-</span>}
+</td>
                         <td className="py-2 px-3 text-right text-gray-100 font-medium">
                           ${Number(m.amount).toFixed(2)}
                         </td>
@@ -303,7 +312,7 @@ export default function Caja() {
                     ))}
                     {!movs.length && !editingRow && (
                       <tr>
-                        <td className="py-4 px-3 text-gray-400 text-center" colSpan={4}>
+                        <td className="py-4 px-3 text-gray-400 text-center" colSpan={5}>
                           Sin movimientos.
                         </td>
                       </tr>

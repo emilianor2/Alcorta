@@ -239,6 +239,68 @@ CREATE TABLE IF NOT EXISTS sale_items (
 ) ENGINE=InnoDB;
 
 -- =========================================
+-- 👤 CLIENTES
+-- =========================================
+CREATE TABLE IF NOT EXISTS customers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  razon_social VARCHAR(200) NOT NULL,
+  nombre VARCHAR(100) NULL,              -- nombre y apellido para persona física
+  apellido VARCHAR(100) NULL,
+  tipo_documento ENUM('DNI','CUIL','CUIT','PASAPORTE','LC','LE') DEFAULT 'DNI',
+  numero_documento VARCHAR(20) NOT NULL,
+  condicion_iva ENUM('RI','Monotributo','Exento','CF') DEFAULT 'CF',
+  tipo_cliente ENUM('Fisica','Juridica') DEFAULT 'Fisica',
+  direccion VARCHAR(200) NULL,
+  localidad VARCHAR(120) NULL,
+  provincia VARCHAR(120) NULL,
+  codigo_postal VARCHAR(10) NULL,
+  telefono VARCHAR(30) NULL,
+  email VARCHAR(120) NULL,
+  -- auditoría
+  created_by INT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_by INT NULL,
+  updated_at TIMESTAMP NULL,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_customers_documento ON customers(numero_documento);
+
+-- =========================================
+-- 🧾 COMPROBANTES / FACTURAS
+-- =========================================
+CREATE TABLE IF NOT EXISTS invoices (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  sale_id INT NOT NULL,
+  customer_id INT NULL,                  -- NULL para factura B sin cliente registrado
+  tipo_comprobante ENUM('A','B') NOT NULL,
+  punto_venta INT NOT NULL DEFAULT 1,
+  numero_comprobante INT NOT NULL,
+  fecha_emision DATETIME DEFAULT CURRENT_TIMESTAMP,
+  subtotal DECIMAL(10,2) NOT NULL,
+  iva DECIMAL(10,2) DEFAULT 0,
+  total DECIMAL(10,2) NOT NULL,
+  condicion_venta VARCHAR(50) DEFAULT 'Contado',
+  -- datos del cliente (snapshot al momento de emisión)
+  cliente_razon_social VARCHAR(200) NULL,
+  cliente_documento VARCHAR(20) NULL,
+  cliente_direccion VARCHAR(200) NULL,
+  cliente_condicion_iva VARCHAR(20) NULL,
+  -- auditoría
+  created_by INT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE,
+  FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  UNIQUE KEY unique_comprobante (punto_venta, numero_comprobante, tipo_comprobante)
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_invoices_sale ON invoices(sale_id);
+CREATE INDEX idx_invoices_customer ON invoices(customer_id);
+CREATE INDEX idx_invoices_fecha ON invoices(fecha_emision);
+
+-- =========================================
 -- ✅ DATOS INICIALES
 -- =========================================
 INSERT INTO `users` (`id`, `email`, `password_hash`, `full_name`, `role`) VALUES

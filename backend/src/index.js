@@ -10,6 +10,8 @@ import reportsRouter from "./routes/reports.routes.js"; // 👈 nuevo
 import employeesRouter from "./routes/employees.routes.js";
 import suppliersRouter from "./routes/suppliers.routes.js";
 import usersRouter from "./routes/users.routes.js";
+import customersRouter from "./routes/customers.routes.js";
+import invoicesRouter from "./routes/invoices.routes.js";
 dotenv.config();
 
 const app = express();
@@ -28,6 +30,8 @@ app.use("/api/reports", reportsRouter); // 👈 nuevo
 app.use("/api/employees", employeesRouter);
 app.use("/api/suppliers", suppliersRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/customers", customersRouter);
+app.use("/api/invoices", invoicesRouter);
 import { authRequired } from './middleware/auth.js';
 
 // --- Inicialización de la base de datos ---

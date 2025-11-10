@@ -99,17 +99,51 @@ router.post("/close/:id", async (req, res) => {
  */
 router.get("/movements/:sessionId", async (req, res) => {
   const { sessionId } = req.params;
-  const [rows] = await pool.query(
-    `SELECT m.*, u.full_name AS user_name, s.razon_social AS supplier_name
-     FROM cash_movements m
-     LEFT JOIN users u ON u.id = m.user_id
-     LEFT JOIN suppliers s ON s.id = m.supplier_id
-     WHERE m.session_id = ?
-     ORDER BY m.id DESC`,
-    [sessionId]
-  );
-  res.json({ ok: true, items: rows });
+
+  try {
+    const [rows] = await pool.query(
+      `
+      SELECT
+        m.*,
+        u.full_name AS user_name,
+        s.razon_social AS supplier_name,
+
+        -- Solo mostrar cliente cuando el movimiento es una venta
+        CASE
+          WHEN m.type = 'venta'
+            THEN COALESCE(c.razon_social, 'Consumidor Final')
+          ELSE NULL
+        END AS customer_name
+
+      FROM cash_movements m
+      LEFT JOIN users u     ON u.id = m.user_id
+      LEFT JOIN suppliers s ON s.id = m.supplier_id
+
+      -- Detectar el sale_id leyendo el número después de '#'
+      LEFT JOIN sales sa ON sa.id = CASE
+        WHEN m.type = 'venta' AND m.reference LIKE 'Venta #%'
+          THEN CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(m.reference, '#', -1), ' ', 1) AS UNSIGNED)
+        ELSE NULL
+      END
+
+      -- Traer la factura (si existe) y su cliente
+      LEFT JOIN invoices  i ON i.sale_id = sa.id
+      LEFT JOIN customers c ON c.id = i.customer_id
+
+      WHERE m.session_id = ?
+      ORDER BY m.id DESC
+      `,
+      [sessionId]
+    );
+
+    res.json({ ok: true, items: rows });
+  } catch (err) {
+    console.error("❌ Error en GET /cash/movements:", err);
+    res.status(500).json({ ok: false, error: "DB_QUERY_ERROR" });
+  }
 });
+
+
 
 /**
  * POST /api/cash/movement/manual
