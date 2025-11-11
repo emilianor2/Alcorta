@@ -19,9 +19,9 @@ Está hecha para practicar **Node.js + Express + MySQL** en el backend y **React
 
 ## 1. Requisitos
 
-- Node.js 18+ (vos tenés 22, va bien)
+- Node.js 18+ 
 - npm
-- MySQL corriendo (local)
+- MySQL corriendo 
 - Git
 
 ---
