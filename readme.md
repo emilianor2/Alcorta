@@ -13,7 +13,7 @@ Aplicación web sencilla para un negocio chico (kiosco, rotisería, almacén) qu
   - los movimientos de caja
   - y quién hizo cada cosa
 
-Está hecha para practicar **Node.js + Express + MySQL** en el backend y **React** en el frontend.
+Está hecha con **Node.js + Express + MySQL** en el backend y **React** en el frontend.
 
 ---
 
@@ -39,7 +39,7 @@ npm install
 Crear el archivo .env en backend/:
 
 env
-Copiar código
+
 PORT=4000
 DB_HOST=localhost
 DB_USER=root
