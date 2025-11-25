@@ -1,9 +1,11 @@
 // src/pages/Ventas.jsx
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import AppHeader from "../components/AppHeader.jsx";
 
 export default function Ventas() {
+  const navigate = useNavigate();
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [categoriaSel, setCategoriaSel] = useState("");
@@ -102,6 +104,11 @@ export default function Ventas() {
 
         // caja
         const session = cashRes.data.session || null;
+        if (!session) {
+          alert("Debés abrir la caja desde el inicio para acceder a este módulo.");
+          navigate("/app", { replace: true });
+          return;
+        }
         setCashSession(session);
         setCashOpen(!!session);
 
@@ -115,6 +122,10 @@ export default function Ventas() {
       } catch (err) {
         console.error("Error al cargar datos iniciales", err);
         setCashOpen(false);
+        if (err?.response?.data?.error === "NO_CASH_OPEN") {
+          alert("Debés abrir la caja desde el inicio para acceder a este módulo.");
+          navigate("/app", { replace: true });
+        }
       }
     };
     fetchData();

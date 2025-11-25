@@ -133,107 +133,77 @@ export default function Home() {
             </div>
           )}
 
-          {/* ADMIN sin caja → igual puede entrar a todo lo de gestión */}
-          {role === "admin" && !cash && (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
-              <Link
-                to="/app/productos"
-                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
-              >
-                Productos
-              </Link>
-              <Link
-                to="/app/reportes"
-                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
-              >
-                Reportes
-              </Link>
-              <Link
-                to="/app/usuarios"
-                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
-              >
-                Usuarios
-              </Link>
-              <Link
-                to="/app/proveedores"
-                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
-              >
-                Proveedores
-              </Link>
-              <div className="border border-surface-400 rounded-xl p-4 text-center text-gray-500 bg-surface-400">
+          {/* MENÚ DE MÓDULOS */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+            {/* Módulos que requieren caja abierta */}
+            {!cash ? (
+              <div className="border border-surface-400 rounded-xl p-4 text-center text-gray-500 bg-surface-400 cursor-not-allowed">
                 Ventas (requiere caja)
               </div>
-              <Link
-                to="/app/caja"
-                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
-              >
-                Ir a Caja
-              </Link>
-            </div>
-          )}
-
-          {/* CON CAJA → menú normal */}
-          {cash && (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* todos */}
+            ) : (
               <Link
                 to="/app/ventas"
                 className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
               >
                 Ventas
               </Link>
+            )}
 
-              {/* admin extra */}
-              {role === "admin" && (
-                <Link
-                  to="/app/productos"
-                  className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
-                >
-                  Productos
-                </Link>
-              )}
-              {role === "admin" && (
-                <Link
-                  to="/app/reportes"
-                  className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
-                >
-                  Reportes
-                </Link>
-              )}
-              {role === "admin" && (
-                <Link
-                  to="/app/usuarios"
-                  className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
-                >
-                  Usuarios
-                </Link>
-              )}
-              {role === "admin" && (
-                <Link
-                  to="/app/proveedores"
-                  className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
-                >
-                  Proveedores
-                </Link>
-              )}
-
-              {/* caja para todos */}
+            {!cash ? (
+              <div className="border border-surface-400 rounded-xl p-4 text-center text-gray-500 bg-surface-400 cursor-not-allowed">
+                Caja (requiere caja abierta)
+              </div>
+            ) : (
               <Link
                 to="/app/caja"
                 className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
               >
                 Caja
               </Link>
-              {role === "admin" && (
-                <Link
-                  to="/app/cocina"
-                  className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
-                >
-                  Cocina
-                </Link>
-              )}
-            </div>
-          )}
+            )}
+
+            {/* Módulos de gestión (siempre disponibles para admin) */}
+            {role === "admin" && (
+              <Link
+                to="/app/productos"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
+              >
+                Productos
+              </Link>
+            )}
+            {role === "admin" && (
+              <Link
+                to="/app/reportes"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
+              >
+                Reportes
+              </Link>
+            )}
+            {role === "admin" && (
+              <Link
+                to="/app/usuarios"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
+              >
+                Usuarios
+              </Link>
+            )}
+            {role === "admin" && (
+              <Link
+                to="/app/proveedores"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
+              >
+                Proveedores
+              </Link>
+            )}
+            {role === "admin" && (
+              <Link
+                to="/app/cocina"
+                className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
+              >
+                Cocina
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>

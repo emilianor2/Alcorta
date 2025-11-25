@@ -15,9 +15,20 @@ export default function Caja() {
   const navigate = useNavigate();
 
   async function loadSession() {
-    const { data } = await api.get("/cash/current");
-    setSession(data.session);
-    if (data.session) loadMovs(data.session.id);
+    try {
+      const { data } = await api.get("/cash/current");
+      if (!data.session) {
+        alert("Debés abrir la caja desde el inicio para acceder a este módulo.");
+        navigate("/app", { replace: true });
+        return;
+      }
+      setSession(data.session);
+      if (data.session) loadMovs(data.session.id);
+    } catch (e) {
+      console.error(e);
+      alert("Error al cargar la información de caja.");
+      navigate("/app", { replace: true });
+    }
   }
 
   async function loadMovs(id) {
@@ -37,6 +48,7 @@ export default function Caja() {
   useEffect(() => {
     loadSession();
     loadProveedores();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Registrar monto inicial (se guarda como movimiento + setea opening_amount)
@@ -118,15 +130,8 @@ export default function Caja() {
       <div className="max-w-4xl mx-auto space-y-6">
         <AppHeader title="Caja" />
 
-        {/* Sin caja abierta */}
-        {!session ? (
-          <div className="bg-surface-200 border border-surface-400 p-6 rounded-xl shadow-card text-center">
-            <h2 className="text-lg mb-2 font-medium text-white">No hay caja abierta</h2>
-            <p className="text-gray-400">
-              Debés abrir la caja desde el inicio para empezar un nuevo turno.
-            </p>
-          </div>
-        ) : (
+        {/* Contenido de caja */}
+        {session && (
           <div className="bg-surface-200 border border-surface-400 p-6 rounded-xl shadow-card space-y-4">
             {/* Cabecera */}
             <div className="flex justify-between items-center">
