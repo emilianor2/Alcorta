@@ -13,15 +13,15 @@ Aplicación web sencilla para un negocio chico (kiosco, rotisería, almacén) qu
   - los movimientos de caja
   - y quién hizo cada cosa
 
-Está hecha para practicar **Node.js + Express + MySQL** en el backend y **React** en el frontend.
+Está hecha con **Node.js + Express + MySQL** en el backend y **React** en el frontend.
 
 ---
 
 ## 1. Requisitos
 
-- Node.js 18+ (vos tenés 22, va bien)
+- Node.js 18+ 
 - npm
-- MySQL corriendo (local)
+- MySQL corriendo 
 - Git
 
 ---
