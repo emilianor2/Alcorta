@@ -301,10 +301,12 @@ export default function Caja() {
                           {m.supplier_name || <span className="text-gray-500">-</span>}
                         </td>
                         <td className="py-2 px-3 text-gray-200">
-  {m.type === "venta"
-    ? (m.customer_name || "Consumidor Final")
-    : <span className="text-gray-500">-</span>}
-</td>
+                          {m.type === "venta" ? (
+                            m.customer_name || "Consumidor Final"
+                          ) : (
+                            <span className="text-gray-500">-</span>
+                          )}
+                        </td>
                         <td className="py-2 px-3 text-right text-gray-100 font-medium">
                           ${Number(m.amount).toFixed(2)}
                         </td>

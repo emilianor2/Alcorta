@@ -140,4 +140,81 @@ router.get("/cash", async (req, res) => {
   res.json({ ok: true, items: result });
 });
 
+/**
+ * GET /api/reports/orders
+ * Reporte de pedidos con métricas de tiempo
+ */
+router.get("/orders", async (req, res) => {
+  const { from, to, status, prep_status } = req.query;
+  const where = [];
+  const params = [];
+
+  if (from) {
+    where.push("DATE(o.created_at) >= ?");
+    params.push(from);
+  }
+  if (to) {
+    where.push("DATE(o.created_at) <= ?");
+    params.push(to);
+  }
+  if (status) {
+    where.push("o.status = ?");
+    params.push(status);
+  }
+  if (prep_status) {
+    where.push("o.prep_status = ?");
+    params.push(prep_status);
+  }
+
+  const whereSQL = where.length ? `WHERE ${where.join(" AND ")}` : "";
+
+  const [rows] = await pool.query(
+    `
+    SELECT
+      o.*,
+      cs.shift_number
+    FROM orders o
+    LEFT JOIN cash_sessions cs ON cs.id = o.cash_session_id
+    ${whereSQL}
+    ORDER BY o.created_at DESC
+    `,
+    params
+  );
+
+  const now = Date.now();
+  const items = rows.map((order) => {
+    const createdMs = order.created_at ? new Date(order.created_at).getTime() : now;
+    const closedMs = order.closed_at ? new Date(order.closed_at).getTime() : null;
+    const prepStartMs =
+      order.prep_status === "en_preparacion" || order.prep_status === "preparado"
+        ? new Date(order.updated_at || order.items_updated_at || order.created_at).getTime()
+        : null;
+
+    const totalMinutes =
+      order.prep_status === "preparado" && closedMs
+        ? Math.max(0, Math.round((closedMs - createdMs) / 60000))
+        : Math.max(0, Math.round((now - createdMs) / 60000));
+
+    const prepMinutes =
+      prepStartMs !== null
+        ? Math.max(
+            0,
+            Math.round(
+              ((order.prep_status === "preparado" && closedMs ? closedMs : now) - prepStartMs) /
+                60000
+            )
+          )
+        : 0;
+
+    return {
+      ...order,
+      total_minutes: totalMinutes,
+      prep_minutes: prepMinutes,
+      live_minutes: Math.max(0, Math.round((now - createdMs) / 60000)),
+    };
+  });
+
+  res.json({ ok: true, items });
+});
+
 export default router;

@@ -8,6 +8,7 @@ import Productos from "./pages/Productos.jsx";
 import Caja from "./pages/Caja.jsx";
 import Usuarios from "./pages/Usuarios.jsx";
 import Proveedores from "./pages/Proveedores.jsx";
+import Cocina from "./pages/Cocina.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
@@ -34,6 +35,14 @@ export default function App() {
         element={
           <ProtectedRoute allowedRoles={["cajero", "admin"]}>
             <Ventas />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/app/cocina"
+        element={
+          <ProtectedRoute allowedRoles={["cocina", "admin"]}>
+            <Cocina />
           </ProtectedRoute>
         }
       />

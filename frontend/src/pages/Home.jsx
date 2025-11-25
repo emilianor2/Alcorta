@@ -28,6 +28,34 @@ export default function Home() {
     loadAll();
   }, []);
 
+  useEffect(() => {
+    if (role === "cocina") {
+      navigate("/app/cocina", { replace: true });
+    }
+  }, [role, navigate]);
+
+  if (role === "cocina") {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-surface-100 to-surface-50 text-gray-100 flex items-center justify-center">
+        <div className="bg-surface-200 border border-surface-400 rounded-2xl shadow-card px-8 py-6 text-center space-y-3">
+          <p className="text-white text-lg font-semibold">
+            Redirigiendo al panel de Cocina...
+          </p>
+          <p className="text-sm text-gray-300">
+            Si no avanza automáticamente, hacé clic{" "}
+            <button
+              onClick={() => navigate("/app/cocina", { replace: true })}
+              className="text-brand-400 underline"
+            >
+              aquí
+            </button>
+            .
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // abre SIEMPRE con 0, monto real se carga en /app/caja
   async function abrirCaja() {
     try {
@@ -196,6 +224,14 @@ export default function Home() {
               >
                 Caja
               </Link>
+              {role === "admin" && (
+                <Link
+                  to="/app/cocina"
+                  className="border border-surface-400 rounded-xl p-4 text-center hover:shadow-card hover:border-brand-500/50 transition bg-surface-300 text-white"
+                >
+                  Cocina
+                </Link>
+              )}
             </div>
           )}
         </div>

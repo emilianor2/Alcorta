@@ -3,15 +3,17 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { pool } from './db.js';
 import authRouter from './routes/auth.routes.js';
-import productsRouter from './routes/products.routes.js'; // 🆕 import nuevo
+import productsRouter from './routes/products.routes.js'; 
 import salesRouter from './routes/sales.routes.js'; 
 import cashRouter from "./routes/cash.routes.js";
-import reportsRouter from "./routes/reports.routes.js"; // 👈 nuevo
+import reportsRouter from "./routes/reports.routes.js"; 
 import employeesRouter from "./routes/employees.routes.js";
 import suppliersRouter from "./routes/suppliers.routes.js";
 import usersRouter from "./routes/users.routes.js";
 import customersRouter from "./routes/customers.routes.js";
 import invoicesRouter from "./routes/invoices.routes.js";
+import ordersRoutes from "./routes/orders.routes.js";
+import { authRequired } from './middleware/auth.js';
 dotenv.config();
 
 const app = express();
@@ -23,16 +25,16 @@ app.use(express.json());
 // Rutas base
 app.get('/api/ping', (req, res) => res.json({ ok: true, ts: Date.now() }));
 app.use('/api/auth', authRouter);
-app.use('/api/products', productsRouter); // 🆕 Montaje del router de productos
+app.use('/api/products', productsRouter); 
 app.use('/api/sales', salesRouter);      
 app.use("/api/cash", cashRouter);
-app.use("/api/reports", reportsRouter); // 👈 nuevo
+app.use("/api/reports", reportsRouter); 
 app.use("/api/employees", employeesRouter);
 app.use("/api/suppliers", suppliersRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/customers", customersRouter);
 app.use("/api/invoices", invoicesRouter);
-import { authRequired } from './middleware/auth.js';
+app.use("/api", ordersRoutes);
 
 // --- Inicialización de la base de datos ---
 (async () => {
@@ -44,7 +46,7 @@ import { authRequired } from './middleware/auth.js';
         email VARCHAR(120) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
         full_name VARCHAR(120) NOT NULL,
-        role ENUM('admin','cajero','mozo') DEFAULT 'cajero',
+        role ENUM('admin','cajero','mozo','cocina') DEFAULT 'cajero',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       ) ENGINE=InnoDB;
     `);
@@ -68,7 +70,10 @@ import { authRequired } from './middleware/auth.js';
 
 // --- Arranque del servidor ---
 const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`🚀 API escuchando en puerto: ${port}`));
+const host = process.env.HOST || "0.0.0.0";
+app.listen(port, host, () =>
+  console.log(`🚀 API escuchando en http://${host}:${port}`)
+);
 app.get('/api/me', authRequired, (req, res) => {
   // viene del token
   res.json({ ok:true, user:req.user });

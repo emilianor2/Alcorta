@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "cross-env HOST=0.0.0.0 PORT=4000 nodemon src/index.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -16,6 +16,7 @@
     "mysql2": "^3.15.3"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.10"
   }
 }

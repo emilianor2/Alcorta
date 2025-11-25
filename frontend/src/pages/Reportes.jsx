@@ -4,7 +4,7 @@ import api from "../services/api";
 import AppHeader from "../components/AppHeader.jsx";
 
 export default function Reportes() {
-  const [tab, setTab] = useState("cajas"); // 'cajas' | 'comprobantes'
+  const [tab, setTab] = useState("cajas"); // 'cajas' | 'comprobantes' | 'pedidos'
   const [from, setFrom] = useState(() => new Date().toISOString().slice(0, 10));
   const [to, setTo] = useState(() => new Date().toISOString().slice(0, 10));
 
@@ -17,6 +17,12 @@ export default function Reportes() {
   const [tipo, setTipo] = useState(""); // A|B|""(todos)
   const [invoices, setInvoices] = useState([]);
   const [loadingInv, setLoadingInv] = useState(false);
+
+  // pedidos
+  const [pedidos, setPedidos] = useState([]);
+  const [loadingPedidos, setLoadingPedidos] = useState(false);
+  const [orderStatus, setOrderStatus] = useState("");
+  const [prepFilter, setPrepFilter] = useState("");
 
   const formatDate = (val) => {
     if (!val) return "-";
@@ -54,9 +60,26 @@ export default function Reportes() {
     }
   }
 
+  async function loadPedidos() {
+    setLoadingPedidos(true);
+    try {
+      const params = { from, to };
+      if (orderStatus) params.status = orderStatus;
+      if (prepFilter) params.prep_status = prepFilter;
+      const { data } = await api.get("/reports/orders", { params });
+      setPedidos(data.items || []);
+    } catch (e) {
+      console.error(e);
+      alert("Error cargando reportes de pedidos");
+    } finally {
+      setLoadingPedidos(false);
+    }
+  }
+
   useEffect(() => {
     if (tab === "cajas") loadCajas();
-    else loadInvoices();
+    else if (tab === "comprobantes") loadInvoices();
+    else loadPedidos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
 
@@ -104,6 +127,16 @@ export default function Reportes() {
           >
             Comprobantes
           </button>
+          <button
+            onClick={() => setTab("pedidos")}
+            className={`px-4 py-2 rounded-lg text-sm ${
+              tab === "pedidos"
+                ? "bg-brand-600 text-white"
+                : "bg-surface-300 text-gray-100 hover:bg-surface-400"
+            }`}
+          >
+            Pedidos
+          </button>
         </div>
 
         {/* filtros */}
@@ -150,7 +183,7 @@ export default function Reportes() {
                 {loadingCajas ? "Cargando..." : "Aplicar"}
               </button>
             </>
-          ) : (
+          ) : tab === "comprobantes" ? (
             <>
               <div>
                 <label className="block text-sm mb-1 text-gray-300">Tipo</label>
@@ -172,14 +205,55 @@ export default function Reportes() {
                 {loadingInv ? "Cargando..." : "Aplicar"}
               </button>
             </>
+          ) : (
+            <>
+              <div>
+                <label className="block text-sm mb-1 text-gray-300">
+                  Estado
+                </label>
+                <select
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2"
+                  value={orderStatus}
+                  onChange={(e) => setOrderStatus(e.target.value)}
+                >
+                  <option value="">Todos</option>
+                  <option value="abierto">Abierto</option>
+                  <option value="finalizado">Finalizado</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm mb-1 text-gray-300">
+                  Preparación
+                </label>
+                <select
+                  className="border border-surface-400 bg-surface-300 text-gray-100 rounded-lg px-3 py-2"
+                  value={prepFilter}
+                  onChange={(e) => setPrepFilter(e.target.value)}
+                >
+                  <option value="">Todos</option>
+                  <option value="abierto">Sin iniciar</option>
+                  <option value="en_preparacion">En proceso</option>
+                  <option value="preparado">Finalizados</option>
+                </select>
+              </div>
+              <button
+                className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg shadow"
+                onClick={loadPedidos}
+                disabled={loadingPedidos}
+              >
+                {loadingPedidos ? "Cargando..." : "Aplicar"}
+              </button>
+            </>
           )}
         </div>
 
         {/* contenido */}
         {tab === "cajas" ? (
           <CajasView cajas={cajas} loading={loadingCajas} formatDate={formatDate} />
-        ) : (
+        ) : tab === "comprobantes" ? (
           <InvoicesView items={invoices} loading={loadingInv} totals={invTotals} />
+        ) : (
+          <PedidosView items={pedidos} loading={loadingPedidos} />
         )}
       </div>
     </div>
@@ -412,6 +486,99 @@ function InvoicesView({ items, loading, totals }) {
             <b>${totals.sumAll.toFixed(2)}</b>
           </p>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function PedidosView({ items, loading }) {
+  const formatMinutes = (mins) => {
+    if (mins === null || mins === undefined) return "-";
+    if (mins < 1) return "<1 min";
+    const hours = Math.floor(mins / 60);
+    const rest = mins % 60;
+    if (!hours) return `${rest} min`;
+    if (!rest) return `${hours} h`;
+    return `${hours} h ${rest} min`;
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="bg-surface-200 border border-surface-400 rounded-xl shadow-card p-4 overflow-x-auto">
+        <table className="min-w-full text-sm">
+          <thead className="border-b border-surface-400 bg-surface-300 text-gray-200">
+            <tr>
+              <th className="py-2 px-3 text-left"># Pedido</th>
+              <th className="py-2 px-3 text-left">Caja / Turno</th>
+              <th className="py-2 px-3 text-left">Estado</th>
+              <th className="py-2 px-3 text-left">Preparación</th>
+              <th className="py-2 px-3 text-left">Creado</th>
+              <th className="py-2 px-3 text-left">Últ. actualización</th>
+              <th className="py-2 px-3 text-left">Tiempo total</th>
+              <th className="py-2 px-3 text-left">Tiempo en prep.</th>
+              <th className="py-2 px-3 text-left">Monto</th>
+              <th className="py-2 px-3 text-left">Modificado</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-100">
+            {items.map((order) => (
+              <tr
+                key={order.id}
+                className="border-b border-surface-400/60 hover:bg-surface-400/20"
+              >
+                <td className="py-2 px-3 font-semibold">
+                  #{order.order_number || order.id}
+                </td>
+                <td className="py-2 px-3">
+                  Caja {order.cash_session_id || "-"} / Turno{" "}
+                  {order.shift_number || "-"}
+                </td>
+                <td className="py-2 px-3 capitalize">{order.status}</td>
+                <td className="py-2 px-3 capitalize">
+                  {order.prep_status || "abierto"}
+                </td>
+                <td className="py-2 px-3">
+                  {order.created_at
+                    ? new Date(order.created_at).toLocaleString()
+                    : "-"}
+                </td>
+                <td className="py-2 px-3">
+                  {order.updated_at
+                    ? new Date(order.updated_at).toLocaleString()
+                    : "-"}
+                </td>
+                <td className="py-2 px-3">
+                  {formatMinutes(
+                    order.status === "finalizado"
+                      ? order.total_minutes
+                      : order.live_minutes
+                  )}
+                </td>
+                <td className="py-2 px-3">{formatMinutes(order.prep_minutes)}</td>
+                <td className="py-2 px-3">${Number(order.total || 0).toFixed(2)}</td>
+                <td className="py-2 px-3">
+                  {order.was_modified ? (
+                    <span className="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-100 border border-amber-400/40">
+                      Sí
+                    </span>
+                  ) : (
+                    "No"
+                  )}
+                </td>
+              </tr>
+            ))}
+            {!items.length && !loading && (
+              <tr>
+                <td
+                  colSpan="10"
+                  className="text-gray-400 py-4 text-center"
+                >
+                  No hay pedidos en el rango seleccionado.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
